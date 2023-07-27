@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres-selina-bolivia
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2253607
+      POSTGRES_DB: selina-bolivia
+    volumes:
+      - postgres_bolivia_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis
+    container_name: redis-selina-bolivia
+    restart: always
+    volumes:
+      - redis_bolivia_data:/data
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_bolivia_data:
+  redis_bolivia_data:

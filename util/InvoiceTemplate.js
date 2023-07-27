@@ -1,0 +1,35 @@
+export default {
+  numeroFactura: 9999999998,
+  nombreRazonSocial: '',
+  codigoPuntoVenta: 9999,
+  codigoTipoDocumentoIdentidad: 5,
+  numeroDocumento: '',
+  complemento: '',
+  codigoCliente: '',
+  codigoMetodoPago: 1,
+  numeroTarjeta: 10000000000000000,
+  montoTotal: 1,
+  codigoMoneda: 1,
+  montoTotalMoneda: 1,
+  usuario: '',
+  emailCliente: '',
+  telefonoCliente: '',
+  montoTotalSujetoIva: 1,
+  tipoCambio: 1,
+  extras: {
+    facturaTicket: '', // Orden de Lavu
+  },
+  detalles: [
+    {
+      codigoProducto: '',
+      codigoActividadSin: '',
+      codigoProductoSin: 99999999,
+      descripcion: '',
+      unidadMedida: 57,
+      precioUnitario: 1,
+      subTotal: 1,
+      cantidad: 1,
+      montoDescuento: 0,
+    },
+  ],
+}
