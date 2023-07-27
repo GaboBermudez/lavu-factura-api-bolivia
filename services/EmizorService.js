@@ -10,8 +10,8 @@ async function setBearerToken() {
   await redisClient.connect()
   const body = {
     grant_type: 'client_credentials',
-    client_id: 300347,
-    client_secret: 'EIWJHFjHzwkNqfY75WoujAbcSoVfW3dZIl4UEwxz',
+    client_id: process.env.EMIZOR_CLIENT_ID,
+    client_secret: process.env.EMIZOR_CLIENT_SECRET,
   }
 
   const response = await axios.get(tokenUrl, { body })

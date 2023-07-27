@@ -13,6 +13,7 @@ export async function facturarHandler(req, res) {
     // Obtener datos de LAVU, armar JSON y enviar a Emizor
     // Homologar productos nuevos
     const orderContents = await LavuService.getOrderContents(orderId)
+    console.log('🚀 ~ file: facturar.handlers.js:16 ~ facturarHandler ~ orderContents:', JSON.stringify(orderContents))
     const productos = getProductos(orderContents)
 
     const productosHomologados = []

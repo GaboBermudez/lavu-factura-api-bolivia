@@ -27,19 +27,6 @@ export function getProductos(data) {
   return items
 }
 
-export function getCustomerData(data) {
-  const originalIdObj = data.elements.find(e => e.name === 'original_id')
-  if (originalIdObj.elements) {
-    const originalId = originalIdObj.elements[0].text
-    const indexOfBracket = originalId.indexOf('{')
-    const objectStr = originalId.substr(indexOfBracket, originalId.length)
-    const newStr = objectStr.split('&quot;').join('"').split('|o|')[0]
-    return JSON.parse(newStr).print_info
-  }
-
-  return false
-}
-
 export function getOrderData(orders, id) {
   let orderToFind
   orders.forEach(order => {
@@ -50,21 +37,6 @@ export function getOrderData(orders, id) {
     }
   })
   return orderToFind
-}
-
-export function getCustomerEmail(data) {
-  const originalIdObj = data.elements.find(e => e.name === 'original_id')
-  // console.log(JSON.stringify(originalIdObj));
-  if (originalIdObj.elements) {
-    const originalId = originalIdObj.elements[0].text
-    const indexOfBracket = originalId.indexOf('{')
-    const objectStr = originalId.substr(indexOfBracket, originalId.length)
-    const newStr = objectStr.split('&quot;').join('"').split('|o|')[1]
-    const customerProps = JSON.parse(newStr)
-    return customerProps.field1
-  }
-
-  return false
 }
 
 export function getCustomerField(customer, key) {
