@@ -14,12 +14,14 @@ export function getProductos(data) {
   productos.forEach(producto => {
     const itemId = getRowValue(producto, 'item_id')
     const descripcion = getRowValue(producto, 'item')
-    const subTotal = getRowValue(producto, 'price')
-    const cantidad = getRowValue(producto, 'quantity')
+    const precioUnitario = Number(getRowValue(producto, 'price'))
+    const subTotal = Number(getRowValue(producto, 'subtotal'))
+    const cantidad = Number(getRowValue(producto, 'quantity'))
     items.push({
       cantidad,
       descripcion,
       itemId,
+      precioUnitario,
       subTotal,
     })
   })

@@ -1,5 +1,6 @@
 import express from 'express'
 import facturarRoutes from './routes/facturar.routes.js'
+import pingRoutes from './routes/ping.routes.js'
 
 const app = express()
 
@@ -7,6 +8,7 @@ const app = express()
 app.use(express.json())
 
 app.use(facturarRoutes)
+app.use(pingRoutes)
 
 app.use((req, res) => {
   res.status(404).json({

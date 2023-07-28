@@ -1,61 +1,63 @@
-import {
-  getCustomerData,
-  getCustomerField,
-  getRowValue,
-  getLote,
-  getVoucher,
-} from './LavuOrderUtils.js'
-import { NombComercialConsts, rucMap } from '../consts/Constants.js'
+import Consecutivo from '../models/consecutivo.js'
+import { buscarProducto, homologarProducto } from '../services/EmizorService.js'
+import { getProductos, getRowValue } from '../util/LavuOrderUtils.js'
 import jsonTemplate from './InvoiceTemplate.js'
 import LavuService from '../services/LavuService.js'
 
-export async function getJSONFromLavu(orderData) {
+const codigoSucursal = 0
+
+export async function getJsonForEmizor(orderId) {
+  const productosHomologados = await obtenerProductos(orderId)
+  const { consecutivo } = await Consecutivo.findOne({ where: { locacion: 'LaPaz' } })
+
+  const orderInfo = await LavuService.getOrderGeneralInfo(orderId)
+  const total = getRowValue(orderInfo.elements[0], 'total')
+
+  jsonTemplate.numeroFactura = Number(consecutivo) // Aumentar para guardar en DB, aumentar aquí o devolverlo al handler y guardarlo ahí?
+  jsonTemplate.detalles = productosHomologados
+  jsonTemplate.montoTotal = total
+  jsonTemplate.montoTotalSujetoIva = total
+  jsonTemplate.montoTotalMoneda = total
+  jsonTemplate.extras.facturaTicket = orderId
+
   return jsonTemplate
-  // return new Promise(async resolve => {
-  //   const orderId = getRowValue(orderData, 'order_id')
+}
 
-  //   const receptor = getCustomerData(orderData)
+async function obtenerProductos(orderId) {
+  // Homologar productos nuevos
+  const orderContents = await LavuService.getOrderContents(orderId)
+  const productos = getProductos(orderContents)
 
-  //   const rucReceptor = getCustomerField(receptor, 'CI/RUC') || ''
-  //   const nombreReceptor = getCustomerField(receptor, 'First_Name') || ''
-  //   const apellidoReceptor = getCustomerField(receptor, 'Last_Name') || ''
-  //   const emailReceptor = getCustomerField(receptor, 'Email') || ''
-  //   const nombreCompletoReceptor = `${nombreReceptor} ${apellidoReceptor}`
+  const productosHomologados = []
 
-  //   // Datos empresa
-  //   jsonTemplate.Encabezado.RucEmpresa = rucMap[process.env.NOMBRE_COMERCIAL]
-  //   jsonTemplate.Encabezado.NombreEmpresa =
-  //     NombComercialConsts[process.env.NOMBRE_COMERCIAL]
+  for (const producto of productos) {
+    const searchResult = await buscarProducto(producto.itemId)
+    const esProductoCreado = searchResult.data.productos_homologados.length > 0
+    if (esProductoCreado) {
+      delete searchResult.data.productos_homologados[0].description
+      productosHomologados.push({
+        ...searchResult.data.productos_homologados[0],
+        descripcion: producto.descripcion,
+        subTotal: producto.subTotal,
+        cantidad: producto.cantidad,
+        precioUnitario: producto.precioUnitario,
+        unidadMedida: 57,
+      })
+    } else {
+      const result = await homologarProducto(producto.itemId)
+      if (result.status === 'success') {
+        delete result.data.description
+        productosHomologados.push({
+          ...result.data,
+          descripcion: producto.descripcion,
+          subTotal: producto.subTotal,
+          cantidad: producto.cantidad,
+          precioUnitario: producto.precioUnitario,
+          unidadMedida: 57,
+        })
+      }
+    }
+  }
 
-  //   // Datos cliente
-  //   jsonTemplate.Encabezado.RucCliente = rucReceptor
-  //   jsonTemplate.Encabezado.NombreCliente = nombreCompletoReceptor
-  //   jsonTemplate.Encabezado.EmailCliente = emailReceptor
-  //   jsonTemplate.Encabezado.SecuencialCompleto = orderId
-
-  //   // Precio
-  //   const precioTotal = Number(getRowValue(orderData, 'total'))
-  //   const impuesto = Number(getRowValue(orderData, 'itax'))
-  //   jsonTemplate.Detalle[0].Precio = precioTotal - impuesto
-
-  //   // Datos pago
-  //   if (precioTotal > 0) {
-  //     const datosPago = await LavuService.getOrderPayments(orderId)
-  //     const formaPago = getRowValue(datosPago.elements[0], 'pay_type') || ''
-  //     jsonTemplate.Encabezado.FormaPago = formaPago
-
-  //     if (formaPago.toLowerCase() === 'card') {
-  //       const orderContents = await LavuService.getOrderContents(orderId)
-  //       const voucher = getVoucher(orderContents[0].elements)
-  //       const lote = getLote(orderContents[0].elements)
-
-  //       jsonTemplate.Encabezado.LoteTarjeta = lote
-  //       jsonTemplate.Encabezado.Notas = voucher
-  //     }
-
-  //     resolve(jsonTemplate)
-  //   }
-
-  //   resolve(false)
-  // })
+  return productosHomologados
 }

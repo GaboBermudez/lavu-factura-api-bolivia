@@ -54,3 +54,11 @@ export async function homologarProducto(codigoProducto) {
 
   return result.data
 }
+
+export async function enviarFactura(factura) {
+  const bearerToken = await getBearerToken()
+  const headers = { Authorization: `Bearer ${bearerToken}` }
+  const result = await axios.post(`${baseUrl}/api/v1/sucursales/0/facturas/compra-venta`, factura, { headers })
+
+  return result.data
+}
