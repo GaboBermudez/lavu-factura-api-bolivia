@@ -1,9 +1,12 @@
+import cors from 'cors'
 import express from 'express'
 import facturarRoutes from './routes/facturar.routes.js'
 import pingRoutes from './routes/ping.routes.js'
 import loginRoutes from './routes/login.routes.js'
 
 const app = express()
+
+app.use(cors())
 
 // Middleware
 app.use(express.json())
