@@ -1,9 +1,9 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../config/database.js'
 
-class Consecutivo extends Model {}
+class Consecutivos extends Model {}
 
-Consecutivo.init(
+Consecutivos.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -22,10 +22,10 @@ Consecutivo.init(
   },
   {
     sequelize,
-    modelName: 'Consecutivo',
-    tableName: 'consecutivo',
+    modelName: 'Consecutivos',
+    tableName: 'consecutivos',
     timestamps: false,
   }
 )
 
-export default Consecutivo
+export default Consecutivos

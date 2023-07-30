@@ -1,4 +1,4 @@
-import Consecutivo from '../models/consecutivo.js'
+import Consecutivos from '../models/consecutivos.js'
 import { buscarProducto, homologarProducto } from '../services/EmizorService.js'
 import { getProductos, getRowValue } from '../util/LavuOrderUtils.js'
 import jsonTemplate from './InvoiceTemplate.js'
@@ -8,19 +8,18 @@ const codigoSucursal = 0
 
 export async function getJsonForEmizor(orderId) {
   const productosHomologados = await obtenerProductos(orderId)
-  const { consecutivo } = await Consecutivo.findOne({ where: { locacion: 'LaPaz' } })
-
+  const consecutivoObj = await Consecutivos.findOne({ where: { locacion: 'LaPaz' } })
   const orderInfo = await LavuService.getOrderGeneralInfo(orderId)
   const total = getRowValue(orderInfo.elements[0], 'total')
 
-  jsonTemplate.numeroFactura = Number(consecutivo) // Aumentar para guardar en DB, aumentar aquí o devolverlo al handler y guardarlo ahí?
+  jsonTemplate.numeroFactura = Number(consecutivoObj.consecutivo) // Aumentar para guardar en DB, aumentar aquí o devolverlo al handler y guardarlo ahí?
   jsonTemplate.detalles = productosHomologados
   jsonTemplate.montoTotal = total
   jsonTemplate.montoTotalSujetoIva = total
   jsonTemplate.montoTotalMoneda = total
   jsonTemplate.extras.facturaTicket = orderId
 
-  return jsonTemplate
+  return { jsonToEmizor: jsonTemplate, consecutivoObj }
 }
 
 async function obtenerProductos(orderId) {
