@@ -17,7 +17,7 @@ export async function facturarHandler(req, res) {
     }
     res.json(resultadoFactura)
   } catch (e) {
-    console.log('Error: ', e.response.data)
+    console.log('Error: ', e)
     res.status(500).json(e.response.data)
   }
 }
