@@ -1,5 +1,6 @@
 import Usuarios from '../models/usuarios.js'
 import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
 
 const secret = process.env.SECRET
 
@@ -12,7 +13,7 @@ export async function loginHandler(req, res) {
       return res.status(401).json({ error: 'Credenciales inválidos' })
     }
 
-    const isPasswordValid = usuario.password === password
+    const isPasswordValid = bcrypt.compareSync(password, usuario.password)
 
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Credenciales inválidos' })
