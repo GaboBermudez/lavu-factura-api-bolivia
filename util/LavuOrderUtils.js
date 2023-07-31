@@ -17,12 +17,13 @@ export function getProductos(data) {
     const precioUnitario = Number(getRowValue(producto, 'price'))
     const subTotal = Number(getRowValue(producto, 'subtotal'))
     const cantidad = Number(getRowValue(producto, 'quantity'))
+    const precioExtra = Number(getRowValue(producto, 'modify_price')) || 0
     items.push({
       cantidad,
       descripcion,
       itemId,
-      precioUnitario,
-      subTotal,
+      precioUnitario: precioUnitario + precioExtra,
+      subTotal: subTotal + precioExtra * cantidad,
     })
   })
 

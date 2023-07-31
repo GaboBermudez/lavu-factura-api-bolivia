@@ -4,20 +4,32 @@ import { getProductos, getRowValue } from '../util/LavuOrderUtils.js'
 import jsonTemplate from './InvoiceTemplate.js'
 import LavuService from '../services/LavuService.js'
 
-const codigoSucursal = 0
-
-export async function getJsonForEmizor(orderId) {
+export async function getJsonForEmizor(body) {
+  const { orderId, esControlTributario, metodoDePago, numeroTarjeta, codigoTipoDocumentoIdentidad, numeroDocumento, emailCliente, telefonoCliente } =
+    body
   const productosHomologados = await obtenerProductos(orderId)
   const consecutivoObj = await Consecutivos.findOne({ where: { locacion: 'LaPaz' } })
   const orderInfo = await LavuService.getOrderGeneralInfo(orderId)
   const total = getRowValue(orderInfo.elements[0], 'total')
 
-  jsonTemplate.numeroFactura = Number(consecutivoObj.consecutivo) // Aumentar para guardar en DB, aumentar aquí o devolverlo al handler y guardarlo ahí?
+  if (!esControlTributario) {
+    jsonTemplate.codigoTipoDocumentoIdentidad = Number(codigoTipoDocumentoIdentidad)
+    jsonTemplate.numeroDocumento = numeroDocumento
+    jsonTemplate.codigoCliente = numeroDocumento
+  }
+
+  jsonTemplate.emailCliente = emailCliente ? emailCliente : ''
+  jsonTemplate.telefonoCliente = telefonoCliente ? telefonoCliente : ''
+
+  jsonTemplate.numeroFactura = Number(consecutivoObj.consecutivo)
   jsonTemplate.detalles = productosHomologados
+  jsonTemplate.codigoMetodoPago = Number(metodoDePago)
   jsonTemplate.montoTotal = total
   jsonTemplate.montoTotalSujetoIva = total
   jsonTemplate.montoTotalMoneda = total
   jsonTemplate.extras.facturaTicket = orderId
+
+  if (metodoDePago === '2') jsonTemplate.numeroTarjeta = Number(numeroTarjeta)
 
   return { jsonToEmizor: jsonTemplate, consecutivoObj }
 }

@@ -4,11 +4,17 @@ import { enviarFactura } from '../services/EmizorService.js'
 
 export async function facturarHandler(req, res) {
   try {
-    const { orderId } = req.body
+    const { orderId, metodoDePago, numeroTarjeta } = req.body
+
     if (!orderId) {
-      res.status(400).json({ message: 'No hay numero de orden' })
+      return res.status(400).json({ message: 'No hay numero de orden' })
     }
-    const { jsonToEmizor, consecutivoObj } = await getJsonForEmizor(orderId)
+
+    if (metodoDePago === '2' && !numeroTarjeta) {
+      return res.status(400).json({ message: 'No hay numero de tarjeta' })
+    }
+
+    const { jsonToEmizor, consecutivoObj } = await getJsonForEmizor(req.body)
     const resultadoFactura = await enviarFactura(jsonToEmizor)
 
     if (resultadoFactura.status === 'success') {
