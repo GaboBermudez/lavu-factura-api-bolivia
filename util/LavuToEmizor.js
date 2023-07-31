@@ -5,15 +5,23 @@ import jsonTemplate from './InvoiceTemplate.js'
 import LavuService from '../services/LavuService.js'
 
 export async function getJsonForEmizor(body) {
-  const { orderId, esControlTributario, metodoDePago, numeroTarjeta, codigoTipoDocumentoIdentidad, numeroDocumento, emailCliente, telefonoCliente } =
-    body
+  const {
+    orderId,
+    esControlTributario,
+    codigoMetodoPago,
+    numeroTarjeta,
+    codigoTipoDocumentoIdentidad,
+    numeroDocumento,
+    emailCliente,
+    telefonoCliente,
+  } = body
   const productosHomologados = await obtenerProductos(orderId)
   const consecutivoObj = await Consecutivos.findOne({ where: { locacion: 'LaPaz' } })
   const orderInfo = await LavuService.getOrderGeneralInfo(orderId)
   const total = getRowValue(orderInfo.elements[0], 'total')
 
   if (!esControlTributario) {
-    jsonTemplate.codigoTipoDocumentoIdentidad = Number(codigoTipoDocumentoIdentidad)
+    jsonTemplate.codigoTipoDocumentoIdentidad = codigoTipoDocumentoIdentidad
     jsonTemplate.numeroDocumento = numeroDocumento
     jsonTemplate.codigoCliente = numeroDocumento
   }
@@ -23,13 +31,13 @@ export async function getJsonForEmizor(body) {
 
   jsonTemplate.numeroFactura = Number(consecutivoObj.consecutivo)
   jsonTemplate.detalles = productosHomologados
-  jsonTemplate.codigoMetodoPago = Number(metodoDePago)
+  jsonTemplate.codigoMetodoPago = codigoMetodoPago
   jsonTemplate.montoTotal = total
   jsonTemplate.montoTotalSujetoIva = total
   jsonTemplate.montoTotalMoneda = total
   jsonTemplate.extras.facturaTicket = orderId
 
-  if (metodoDePago === '2') jsonTemplate.numeroTarjeta = Number(numeroTarjeta)
+  if (codigoMetodoPago === '2') jsonTemplate.numeroTarjeta = Number(numeroTarjeta)
 
   return { jsonToEmizor: jsonTemplate, consecutivoObj }
 }
