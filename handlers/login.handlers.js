@@ -24,7 +24,12 @@ export async function loginHandler(req, res) {
 
     const token = jwt.sign(payload, secret, { expiresIn: expiresInOneYear })
 
-    res.json({ token })
+    res.cookie('token', token, {
+      httpOnly: true,
+      // secure: true,
+    })
+
+    res.send('Token sent as a secure cookie.')
   } catch (error) {
     console.error('Error iniciando sesión:', error)
     res.status(500).json({ error: 'Falló inicio de sesión' })
