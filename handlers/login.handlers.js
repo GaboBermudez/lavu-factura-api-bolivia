@@ -2,7 +2,7 @@ import Usuarios from '../models/usuarios.js'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
-const secret = process.env.SECRET
+export const secret = process.env.SECRET
 
 export async function loginHandler(req, res) {
   try {
@@ -24,14 +24,9 @@ export async function loginHandler(req, res) {
 
     const token = jwt.sign(payload, secret, { expiresIn: expiresInOneYear })
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      // secure: true,
-    })
-
-    res.send('Token sent as a secure cookie.')
+    res.json({ userId: usuario.id, nombre: usuario.nombre, token: token })
   } catch (error) {
     console.error('Error iniciando sesión:', error)
-    res.status(500).json({ error: 'Falló inicio de sesión' })
+    return res.status(500).json({ error: 'Falló inicio de sesión' })
   }
 }
