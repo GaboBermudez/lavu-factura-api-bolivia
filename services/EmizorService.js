@@ -2,7 +2,8 @@ import axios from 'axios'
 import { createClient } from 'redis'
 
 const REDIS_PREFIX = 'lapaz'
-const baseUrl = 'https://sinfel.emizor.com'
+// const baseUrl = 'https://sinfel.emizor.com' // Pruebas
+const baseUrl = 'https://fel.emizor.com' // Producción
 const tokenUrl = `${baseUrl}/oauth/token`
 
 const redisHost = process.env.REDIS_HOST

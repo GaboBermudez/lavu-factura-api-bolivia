@@ -41,7 +41,7 @@ export async function getJsonForEmizor(body) {
   jsonToEmizor.montoTotalMoneda = total
   jsonToEmizor.extras.facturaTicket = orderId
 
-  if (codigoMetodoPago === 2) jsonToEmizor.numeroTarjeta = numeroTarjeta
+  if (codigoMetodoPago === 2 || codigoMetodoPago === 10 || codigoMetodoPago === 18) jsonToEmizor.numeroTarjeta = numeroTarjeta
 
   return { jsonToEmizor, consecutivoObj }
 }
