@@ -15,7 +15,7 @@ export default {
   montoTotalSujetoIva: 1,
   tipoCambio: 1,
   extras: {
-    facturaTicket: '', // Orden de Lavu
+    facturaTicket: '',
   },
   detalles: [
     {

@@ -21,6 +21,7 @@ export async function getJsonForEmizor(body) {
   const consecutivoObj = await Consecutivos.findOne({ where: { locacion: 'LaPaz' } })
   const orderInfo = await LavuService.getOrderGeneralInfo(orderId)
   const total = getRowValue(orderInfo.elements[0], 'total')
+  const descuento = getRowValue(orderInfo.elements[0], 'discount')
 
   if (!esControlTributario) {
     jsonToEmizor.codigoTipoDocumentoIdentidad = codigoTipoDocumentoIdentidad
@@ -31,6 +32,7 @@ export async function getJsonForEmizor(body) {
     jsonToEmizor.telefonoCliente = telefonoCliente ? telefonoCliente : ''
   }
 
+  if (descuento) jsonToEmizor.descuentoAdicional = Number(descuento)
   jsonToEmizor.numeroFactura = Number(consecutivoObj.consecutivo)
   jsonToEmizor.detalles = productosHomologados
   jsonToEmizor.codigoMetodoPago = codigoMetodoPago

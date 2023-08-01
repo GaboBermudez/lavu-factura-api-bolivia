@@ -16,6 +16,7 @@ export async function facturarHandler(req, res) {
     }
 
     const { jsonToEmizor, consecutivoObj } = await getJsonForEmizor(req.body)
+    console.log('🚀 ~ file: facturar.handlers.js:19 ~ facturarHandler ~ jsonToEmizor:', jsonToEmizor)
     const resultadoFactura = await enviarFactura(jsonToEmizor)
 
     if (resultadoFactura.status === 'success') {
