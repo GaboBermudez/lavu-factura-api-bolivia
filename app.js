@@ -11,9 +11,9 @@ app.use(cors())
 // Middleware
 app.use(express.json())
 
+app.use(loginRoutes)
 app.use(facturarRoutes)
 app.use(pingRoutes)
-app.use(loginRoutes)
 
 app.use((req, res) => {
   res.status(404).json({
