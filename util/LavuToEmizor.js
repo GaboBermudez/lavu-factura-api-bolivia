@@ -11,6 +11,7 @@ export async function getJsonForEmizor(body) {
     codigoMetodoPago,
     numeroTarjeta,
     codigoTipoDocumentoIdentidad,
+    nombreRazonSocial,
     numeroDocumento,
     emailCliente,
     telefonoCliente,
@@ -23,11 +24,11 @@ export async function getJsonForEmizor(body) {
   if (!esControlTributario) {
     jsonTemplate.codigoTipoDocumentoIdentidad = codigoTipoDocumentoIdentidad
     jsonTemplate.numeroDocumento = numeroDocumento
+    jsonTemplate.nombreRazonSocial = nombreRazonSocial
     jsonTemplate.codigoCliente = numeroDocumento
+    jsonTemplate.emailCliente = emailCliente ? emailCliente : ''
+    jsonTemplate.telefonoCliente = telefonoCliente ? telefonoCliente : ''
   }
-
-  jsonTemplate.emailCliente = emailCliente ? emailCliente : ''
-  jsonTemplate.telefonoCliente = telefonoCliente ? telefonoCliente : ''
 
   jsonTemplate.numeroFactura = Number(consecutivoObj.consecutivo)
   jsonTemplate.detalles = productosHomologados
@@ -37,7 +38,7 @@ export async function getJsonForEmizor(body) {
   jsonTemplate.montoTotalMoneda = total
   jsonTemplate.extras.facturaTicket = orderId
 
-  if (codigoMetodoPago === '2') jsonTemplate.numeroTarjeta = Number(numeroTarjeta)
+  if (codigoMetodoPago === 2) jsonTemplate.numeroTarjeta = numeroTarjeta
 
   return { jsonToEmizor: jsonTemplate, consecutivoObj }
 }
