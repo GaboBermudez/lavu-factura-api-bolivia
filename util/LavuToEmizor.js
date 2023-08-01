@@ -5,6 +5,7 @@ import jsonTemplate from './InvoiceTemplate.js'
 import LavuService from '../services/LavuService.js'
 
 export async function getJsonForEmizor(body) {
+  const jsonToEmizor = { ...jsonTemplate }
   const {
     orderId,
     esControlTributario,
@@ -22,25 +23,25 @@ export async function getJsonForEmizor(body) {
   const total = getRowValue(orderInfo.elements[0], 'total')
 
   if (!esControlTributario) {
-    jsonTemplate.codigoTipoDocumentoIdentidad = codigoTipoDocumentoIdentidad
-    jsonTemplate.numeroDocumento = numeroDocumento
-    jsonTemplate.nombreRazonSocial = nombreRazonSocial
-    jsonTemplate.codigoCliente = numeroDocumento
-    jsonTemplate.emailCliente = emailCliente ? emailCliente : ''
-    jsonTemplate.telefonoCliente = telefonoCliente ? telefonoCliente : ''
+    jsonToEmizor.codigoTipoDocumentoIdentidad = codigoTipoDocumentoIdentidad
+    jsonToEmizor.numeroDocumento = numeroDocumento
+    jsonToEmizor.nombreRazonSocial = nombreRazonSocial
+    jsonToEmizor.codigoCliente = numeroDocumento
+    jsonToEmizor.emailCliente = emailCliente ? emailCliente : ''
+    jsonToEmizor.telefonoCliente = telefonoCliente ? telefonoCliente : ''
   }
 
-  jsonTemplate.numeroFactura = Number(consecutivoObj.consecutivo)
-  jsonTemplate.detalles = productosHomologados
-  jsonTemplate.codigoMetodoPago = codigoMetodoPago
-  jsonTemplate.montoTotal = total
-  jsonTemplate.montoTotalSujetoIva = total
-  jsonTemplate.montoTotalMoneda = total
-  jsonTemplate.extras.facturaTicket = orderId
+  jsonToEmizor.numeroFactura = Number(consecutivoObj.consecutivo)
+  jsonToEmizor.detalles = productosHomologados
+  jsonToEmizor.codigoMetodoPago = codigoMetodoPago
+  jsonToEmizor.montoTotal = total
+  jsonToEmizor.montoTotalSujetoIva = total
+  jsonToEmizor.montoTotalMoneda = total
+  jsonToEmizor.extras.facturaTicket = orderId
 
-  if (codigoMetodoPago === 2) jsonTemplate.numeroTarjeta = numeroTarjeta
+  if (codigoMetodoPago === 2) jsonToEmizor.numeroTarjeta = numeroTarjeta
 
-  return { jsonToEmizor: jsonTemplate, consecutivoObj }
+  return { jsonToEmizor, consecutivoObj }
 }
 
 async function obtenerProductos(orderId) {
