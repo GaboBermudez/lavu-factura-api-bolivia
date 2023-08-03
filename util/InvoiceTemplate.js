@@ -1,10 +1,10 @@
 export default {
   numeroFactura: 9999999998,
-  nombreRazonSocial: 'Control Tributario',
+  nombreRazonSocial: 'SIN NOMBRE',
   codigoPuntoVenta: 1,
   codigoTipoDocumentoIdentidad: 1,
-  numeroDocumento: '99002',
-  codigoCliente: '99002',
+  numeroDocumento: '1111',
+  codigoCliente: '1111',
   codigoMetodoPago: 1,
   montoTotal: 1,
   codigoMoneda: 1,
