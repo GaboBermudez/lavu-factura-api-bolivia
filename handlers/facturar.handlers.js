@@ -1,7 +1,5 @@
-import Consecutivos from '../models/consecutivos.js'
 import { getJsonForEmizor } from '../util/LavuToEmizor.js'
 import { enviarFactura } from '../services/EmizorService.js'
-import jwt from 'jsonwebtoken'
 
 export async function facturarHandler(req, res) {
   try {
@@ -24,10 +22,11 @@ export async function facturarHandler(req, res) {
     }
     return res.json(resultadoFactura)
   } catch (e) {
-    console.log('Error: ', e)
     if (e && e.response && e.response.data) {
+      console.log('Error response.data: ', JSON.stringify(e.response.data))
       return res.status(500).json(e.response.data)
     } else {
+      console.log('Error: ', e)
       return res.status(500).json(e)
     }
   }
