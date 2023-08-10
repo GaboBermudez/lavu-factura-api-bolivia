@@ -24,7 +24,7 @@ export function getProductos(data) {
         descripcion,
         itemId,
         precioUnitario: precioUnitario + precioExtra,
-        subTotal: (subTotal + precioExtra) * cantidad,
+        subTotal: subTotal + precioExtra,
       })
     }
   })
