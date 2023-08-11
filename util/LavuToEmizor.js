@@ -47,9 +47,12 @@ export async function getJsonForEmizor(body) {
 }
 
 async function obtenerProductos(orderId) {
+  console.log('🚀 ~ file: LavuToEmizor.js:50 ~ obtenerProductos ~ orderId:', orderId)
   // Homologar productos nuevos
   const orderContents = await LavuService.getOrderContents(orderId)
+  console.log('🚀 ~ file: LavuToEmizor.js:52 ~ obtenerProductos ~ orderContents:', orderContents)
   const productos = getProductos(orderContents)
+  console.log('🚀 ~ file: LavuToEmizor.js:54 ~ obtenerProductos ~ productos:', productos)
 
   const productosHomologados = []
 
