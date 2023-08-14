@@ -15,7 +15,7 @@ export function getProductos(data) {
     const itemId = getRowValue(producto, 'item_id')
     const descripcion = getRowValue(producto, 'item')
     const precioUnitario = Number(getRowValue(producto, 'price'))
-    const subTotal = Number(getRowValue(producto, 'subtotal'))
+    const subTotal = Number(getRowValue(producto, 'subtotal_with_mods'))
     const cantidad = Number(getRowValue(producto, 'quantity'))
     const precioExtra = Number(getRowValue(producto, 'modify_price')) || 0
     if (cantidad > 0) {
@@ -24,7 +24,7 @@ export function getProductos(data) {
         descripcion,
         itemId,
         precioUnitario: precioUnitario + precioExtra,
-        subTotal: subTotal + precioExtra,
+        subTotal: subTotal,
       })
     }
   })
