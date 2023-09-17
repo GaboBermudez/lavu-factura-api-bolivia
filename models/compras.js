@@ -1,9 +1,9 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../config/database.js'
 
-class Consecutivos extends Model {}
+class Compras extends Model {}
 
-Consecutivos.init(
+Compras.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -11,21 +11,25 @@ Consecutivos.init(
       autoIncrement: true,
       allowNull: false,
     },
-    locacion: {
+    buyer: {
       type: DataTypes.STRING(64),
       allowNull: true,
     },
-    consecutivo: {
-      type: DataTypes.BIGINT,
+    seller: {
+      type: DataTypes.STRING(64),
+      allowNull: true,
+    },
+    monto: {
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
   },
   {
     sequelize,
-    modelName: 'Consecutivos',
-    tableName: 'consecutivos',
+    modelName: 'Compras',
+    tableName: 'compras',
     timestamps: false,
   }
 )
 
-export default Consecutivos
+export default Compras
